@@ -44,9 +44,11 @@ defmodule JidoGemini.MixProject do
 
   defp deps do
     [
-      # Runtime
+      # Core ecosystem
+      {:zoi, "~> 0.16"},
+      {:splode, "~> 0.3"},
       {:jido_harness, path: "../jido_harness"},
-      {:gemini_cli_sdk, "~> 0.1"},
+      # {:gemini_cli_sdk, "~> 0.1"},
       {:jason, "~> 1.4"},
 
       # Dev/Test

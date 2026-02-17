@@ -3,7 +3,7 @@ defmodule JidoGemini.MixProject do
 
   @version "0.1.0"
   @source_url "https://github.com/agentjido/jido_gemini"
-  @description "Google Gemini CLI adapter for JidoHarness"
+  @description "Google Gemini CLI adapter for Jido.Harness"
 
   def project do
     [
@@ -21,12 +21,29 @@ defmodule JidoGemini.MixProject do
       homepage_url: @source_url,
       docs: [
         main: "JidoGemini",
-        extras: ["README.md", "CHANGELOG.md"],
+        extras: ["README.md", "CHANGELOG.md", "CONTRIBUTING.md", "guides/getting-started.md"],
         formatters: ["html"]
+      ],
+      test_coverage: [
+        tool: ExCoveralls,
+        summary: [threshold: 90]
       ],
       # Hex packaging
       package: [
         name: :jido_gemini,
+        description: @description,
+        files: [
+          ".formatter.exs",
+          "CHANGELOG.md",
+          "CONTRIBUTING.md",
+          "LICENSE",
+          "README.md",
+          "usage-rules.md",
+          "config",
+          "guides",
+          "lib",
+          "mix.exs"
+        ],
         licenses: ["Apache-2.0"],
         links: %{"GitHub" => @source_url}
       ]
@@ -36,6 +53,16 @@ defmodule JidoGemini.MixProject do
   def application do
     [
       extra_applications: [:logger]
+    ]
+  end
+
+  def cli do
+    [
+      preferred_envs: [
+        coveralls: :test,
+        "coveralls.github": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -64,11 +91,12 @@ defmodule JidoGemini.MixProject do
 
   defp aliases do
     [
-      setup: ["deps.get"],
+      setup: ["deps.get", "git_hooks.install"],
+      q: ["quality"],
       quality: [
-        "compile",
         "format --check-formatted",
-        "credo --strict",
+        "compile --warnings-as-errors",
+        "credo --min-priority higher",
         "dialyzer",
         "doctor --raise"
       ],

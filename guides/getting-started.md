@@ -1,6 +1,6 @@
 # Getting Started with JidoGemini
 
-JidoGemini is an adapter that wraps the Gemini CLI SDK to implement the JidoHarness.Adapter behaviour.
+JidoGemini is an adapter that wraps the Gemini CLI SDK to implement the Jido.Harness.Adapter behaviour.
 
 ## Installation
 
@@ -26,19 +26,19 @@ mix deps.get
 # Run a prompt through Gemini
 {:ok, events} = JidoGemini.run("your prompt here")
 
-# Events will be a stream of normalized JidoHarness.Event structs
+# Events will be a stream of normalized Jido.Harness.Event structs
 ```
 
 ## Adapter Implementation
 
-JidoGemini.Adapter implements the `JidoHarness.Adapter` behaviour:
+JidoGemini.Adapter implements the `Jido.Harness.Adapter` behaviour:
 
 ```elixir
 defmodule JidoGemini.Adapter do
-  @behaviour JidoHarness.Adapter
+  @behaviour Jido.Harness.Adapter
 
   def run(prompt, opts) do
-    # Maps Gemini SDK events to JidoHarness.Event structs
+    # Maps Gemini SDK events to Jido.Harness.Event structs
   end
 end
 ```

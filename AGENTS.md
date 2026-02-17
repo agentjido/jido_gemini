@@ -2,13 +2,13 @@
 
 ## Overview
 
-JidoGemini is a thin adapter that wraps the `gemini_cli_sdk` package to implement the `JidoHarness.Adapter` behaviour.
+JidoGemini is a thin adapter that wraps the `gemini_cli_sdk` package to implement the `Jido.Harness.Adapter` behaviour.
 
 ## Structure
 
-- `lib/jido_gemini.ex` — Public API (`run/2`)
-- `lib/jido_gemini/adapter.ex` — `JidoHarness.Adapter` implementation
-- `lib/jido_gemini/mapper.ex` — Maps Gemini CLI SDK events to `JidoHarness.Event` structs
+- `lib/jido_gemini/gemini.ex` — Public API (`run/2`)
+- `lib/jido_gemini/adapter.ex` — `Jido.Harness.Adapter` implementation
+- `lib/jido_gemini/mapper.ex` — Maps Gemini CLI SDK events to `Jido.Harness.Event` structs
 
 ## Commands
 

@@ -2,13 +2,13 @@
 
 ## Context
 
-JidoGemini is a thin adapter wrapping the Gemini CLI SDK to implement the JidoHarness.Adapter behaviour.
+JidoGemini is a thin adapter wrapping the Gemini CLI SDK to implement the Jido.Harness.Adapter behaviour.
 
 ## Key Concepts
 
 ### Adapter Pattern
-- `JidoGemini.Adapter` implements `JidoHarness.Adapter` behaviour
-- `JidoGemini.Mapper` translates Gemini SDK events to normalized `JidoHarness.Event` structs
+- `JidoGemini.Adapter` implements `Jido.Harness.Adapter` behaviour
+- `JidoGemini.Mapper` translates Gemini SDK events to normalized `Jido.Harness.Event` structs
 - Keep the adapter thin — delegate to `gemini_cli_sdk` for heavy lifting
 
 ### Error Handling
@@ -68,11 +68,11 @@ Valid commit types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, 
 
 ### Gemini CLI SDK
 - Wraps `GeminiCliSdk.execute/2` for running prompts
-- Maps SDK response events to `JidoHarness.Event` structs
+- Maps SDK response events to `Jido.Harness.Event` structs
 
-### JidoHarness
-- Implements `JidoHarness.Adapter` behaviour
-- Events comply with `JidoHarness.Event` schema
+### Jido.Harness
+- Implements `Jido.Harness.Adapter` behaviour
+- Events comply with `Jido.Harness.Event` schema
 
 ## Questions?
 

@@ -1,9 +1,9 @@
 defmodule JidoGemini do
   @moduledoc """
-  Google Gemini CLI adapter for JidoHarness.
+  Google Gemini CLI adapter for Jido.Harness.
 
   Provides a thin wrapper around the Gemini CLI SDK, translating its events
-  into normalized JidoHarness.Event structs.
+  into normalized Jido.Harness.Event structs.
 
   ## Usage
 
@@ -15,7 +15,7 @@ defmodule JidoGemini do
   Runs a prompt through the Gemini CLI adapter.
 
   Delegates to `JidoGemini.Adapter.run/2` to handle the actual execution
-  and event translation from the Gemini SDK to JidoHarness events.
+  and event translation from the Gemini SDK to Jido.Harness events.
 
   ## Parameters
 
@@ -24,7 +24,7 @@ defmodule JidoGemini do
 
   ## Returns
 
-    * `{:ok, stream}` - A stream of normalized JidoHarness.Event structs
+    * `{:ok, stream}` - A stream of normalized Jido.Harness.Event structs
     * `{:error, reason}` - An error tuple on failure
   """
   @spec run(String.t(), keyword()) :: {:ok, Enumerable.t()} | {:error, term()}

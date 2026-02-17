@@ -1,6 +1,6 @@
 # JidoGemini
 
-Google Gemini CLI adapter for [JidoHarness](https://github.com/agentjido/jido_harness).
+Google Gemini CLI adapter for [Jido.Harness](https://github.com/agentjido/jido_harness).
 
 ## Status
 

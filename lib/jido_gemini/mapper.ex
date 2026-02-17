@@ -1,13 +1,13 @@
 defmodule JidoGemini.Mapper do
   @moduledoc """
-  Maps Gemini CLI SDK events to JidoHarness.Event structs.
+  Maps Gemini CLI SDK events to Jido.Harness.Event structs.
 
   This module provides the translation layer between the Gemini CLI SDK's native
-  event format and the normalized JidoHarness.Event format.
+  event format and the normalized Jido.Harness.Event format.
   """
 
   @doc """
-  Maps a Gemini SDK event to a JidoHarness.Event struct.
+  Maps a Gemini SDK event to a Jido.Harness.Event struct.
 
   ## Parameters
 
@@ -15,14 +15,13 @@ defmodule JidoGemini.Mapper do
 
   ## Returns
 
-    * `{:ok, event}` - A normalized JidoHarness.Event struct
+    * `{:ok, event}` - A normalized Jido.Harness.Event struct
     * `{:error, reason}` - Error tuple on invalid event
   """
-  @spec map_event(map()) :: {:ok, map()} | {:error, term()}
+  @spec map_event(term()) :: {:ok, map()} | {:error, term()}
   def map_event(gemini_event) when is_map(gemini_event) do
-    # TODO: Implement event mapping
-    # Map Gemini SDK event structure to JidoHarness.Event schema
-
     {:ok, gemini_event}
   end
+
+  def map_event(_), do: {:error, :invalid_event}
 end

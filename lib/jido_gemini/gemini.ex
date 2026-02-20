@@ -28,7 +28,17 @@ defmodule JidoGemini do
     * `{:error, reason}` - An error tuple on failure
   """
   @spec run(String.t(), keyword()) :: {:ok, Enumerable.t()} | {:error, term()}
-  def run(prompt, opts \\ []) do
-    JidoGemini.Adapter.run(prompt, opts)
+  def run(prompt, opts \\ []) when is_binary(prompt) and is_list(opts) do
+    request_opts =
+      opts
+      |> Keyword.take([:cwd, :model, :max_turns, :timeout_ms, :system_prompt, :allowed_tools, :attachments, :metadata])
+
+    adapter_opts =
+      opts
+      |> Keyword.drop([:cwd, :model, :max_turns, :timeout_ms, :system_prompt, :allowed_tools, :attachments, :metadata])
+
+    with {:ok, request} <- Jido.Harness.RunRequest.new(Map.new([{:prompt, prompt} | request_opts])) do
+      JidoGemini.Adapter.run(request, adapter_opts)
+    end
   end
 end

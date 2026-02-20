@@ -1,9 +1,9 @@
-defmodule JidoGemini.AdapterTest do
+defmodule Jido.Gemini.AdapterTest do
   use ExUnit.Case, async: false
 
   alias GeminiCliSdk.Types.{InitEvent, MessageEvent, ResultEvent}
   alias Jido.Harness.RunRequest
-  alias JidoGemini.Adapter
+  alias Jido.Gemini.Adapter
 
   defmodule StubSdk do
     def execute(prompt, _opts) do

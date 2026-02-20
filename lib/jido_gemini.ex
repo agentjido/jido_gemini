@@ -1,4 +1,4 @@
-defmodule JidoGemini do
+defmodule Jido.Gemini do
   @moduledoc """
   Google Gemini CLI adapter for Jido.Harness.
 
@@ -7,14 +7,14 @@ defmodule JidoGemini do
 
   ## Usage
 
-      {:ok, events} = JidoGemini.run("your prompt")
+      {:ok, events} = Jido.Gemini.run("your prompt")
       Stream.each(events, &handle_event/1)
   """
 
   @doc """
   Runs a prompt through the Gemini CLI adapter.
 
-  Delegates to `JidoGemini.Adapter.run/2` to handle the actual execution
+  Delegates to `Jido.Gemini.Adapter.run/2` to handle the actual execution
   and event translation from the Gemini SDK to Jido.Harness events.
 
   ## Parameters
@@ -38,7 +38,7 @@ defmodule JidoGemini do
       |> Keyword.drop([:cwd, :model, :max_turns, :timeout_ms, :system_prompt, :allowed_tools, :attachments, :metadata])
 
     with {:ok, request} <- Jido.Harness.RunRequest.new(Map.new([{:prompt, prompt} | request_opts])) do
-      JidoGemini.Adapter.run(request, adapter_opts)
+      Jido.Gemini.Adapter.run(request, adapter_opts)
     end
   end
 end

@@ -1,4 +1,4 @@
-defmodule JidoGemini.Mapper do
+defmodule Jido.Gemini.Mapper do
   @moduledoc """
   Maps Gemini CLI SDK events to Jido.Harness.Event structs.
   """

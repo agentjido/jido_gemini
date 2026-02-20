@@ -1,4 +1,4 @@
-defmodule JidoGemini.Adapter do
+defmodule Jido.Gemini.Adapter do
   @moduledoc """
   `Jido.Harness.Adapter` implementation for Gemini CLI.
   """
@@ -7,7 +7,7 @@ defmodule JidoGemini.Adapter do
 
   alias GeminiCliSdk.Options
   alias Jido.Harness.{Capabilities, Event, RunRequest, RuntimeContract}
-  alias JidoGemini.Mapper
+  alias Jido.Gemini.Mapper
 
   @option_keys [
     :model,
@@ -109,7 +109,8 @@ defmodule JidoGemini.Adapter do
         %{
           "tool" => "gemini",
           "when_missing" => true,
-          "command" => "if command -v npm >/dev/null 2>&1; then npm install -g @google/gemini-cli; else echo 'npm not available'; exit 1; fi"
+          "command" =>
+            "if command -v npm >/dev/null 2>&1; then npm install -g @google/gemini-cli; else echo 'npm not available'; exit 1; fi"
         }
       ],
       auth_bootstrap_steps: [],

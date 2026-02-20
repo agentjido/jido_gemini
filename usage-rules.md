@@ -1,20 +1,20 @@
-# JidoGemini Usage Rules for AI/LLM Development
+# Jido.Gemini Usage Rules for AI/LLM Development
 
 ## Context
 
-JidoGemini is a thin adapter wrapping the Gemini CLI SDK to implement the Jido.Harness.Adapter behaviour.
+Jido.Gemini is a thin adapter wrapping the Gemini CLI SDK to implement the Jido.Harness.Adapter behaviour.
 
 ## Key Concepts
 
 ### Adapter Pattern
-- `JidoGemini.Adapter` implements `Jido.Harness.Adapter` behaviour
-- `JidoGemini.Mapper` translates Gemini SDK events to normalized `Jido.Harness.Event` structs
+- `Jido.Gemini.Adapter` implements `Jido.Harness.Adapter` behaviour
+- `Jido.Gemini.Mapper` translates Gemini SDK events to normalized `Jido.Harness.Event` structs
 - Keep the adapter thin — delegate to `gemini_cli_sdk` for heavy lifting
 
 ### Error Handling
 - All errors use `Splode` error composition (when implemented)
-- Validation errors use `JidoGemini.Error.InvalidInputError`
-- Execution errors use `JidoGemini.Error.ExecutionFailureError`
+- Validation errors use `Jido.Gemini.Error.InvalidInputError`
+- Execution errors use `Jido.Gemini.Error.ExecutionFailureError`
 
 ### Schema Validation
 - Core structs use Zoi schemas

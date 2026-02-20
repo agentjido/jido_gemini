@@ -1,8 +1,8 @@
-defmodule JidoGemini.MapperTest do
+defmodule Jido.Gemini.MapperTest do
   use ExUnit.Case, async: true
 
   alias GeminiCliSdk.Types.{InitEvent, MessageEvent, ResultEvent}
-  alias JidoGemini.Mapper
+  alias Jido.Gemini.Mapper
 
   test "map_event/1 maps init events" do
     event = %InitEvent{session_id: "gem-1", model: "gemini-2.5-pro"}

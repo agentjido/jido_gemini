@@ -1,4 +1,4 @@
-# Contributing to JidoGemini
+# Contributing to Jido.Gemini
 
 Thank you for your interest in contributing!
 

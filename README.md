@@ -1,4 +1,4 @@
-# JidoGemini
+# Jido.Gemini
 
 Google Gemini CLI adapter for [Jido.Harness](https://github.com/agentjido/jido_harness).
 
@@ -22,7 +22,7 @@ end
 ## Usage
 
 ```elixir
-JidoGemini.run("Hello, Gemini!")
+Jido.Gemini.run("Hello, Gemini!")
 ```
 
 ## License

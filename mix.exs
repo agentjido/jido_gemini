@@ -1,4 +1,4 @@
-defmodule JidoGemini.MixProject do
+defmodule Jido.Gemini.MixProject do
   use Mix.Project
 
   @version "0.1.0"
@@ -15,12 +15,12 @@ defmodule JidoGemini.MixProject do
       deps: deps(),
       aliases: aliases(),
       # Documentation
-      name: "JidoGemini",
+      name: "Jido.Gemini",
       description: @description,
       source_url: @source_url,
       homepage_url: @source_url,
       docs: [
-        main: "JidoGemini",
+        main: "Jido.Gemini",
         extras: ["README.md", "CHANGELOG.md", "CONTRIBUTING.md", "guides/getting-started.md"],
         formatters: ["html"]
       ],

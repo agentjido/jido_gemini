@@ -1,4 +1,4 @@
-defmodule JidoGeminiTest do
+defmodule Jido.GeminiTest do
   use ExUnit.Case, async: false
 
   alias GeminiCliSdk.Types.{MessageEvent, ResultEvent}
@@ -23,7 +23,7 @@ defmodule JidoGeminiTest do
   end
 
   test "run/1 returns a stream tuple" do
-    assert {:ok, stream} = JidoGemini.run("hello")
+    assert {:ok, stream} = Jido.Gemini.run("hello")
     events = Enum.to_list(stream)
     assert Enum.any?(events, &(&1.type == :session_completed))
   end

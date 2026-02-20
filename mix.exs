@@ -72,7 +72,7 @@ defmodule JidoGemini.MixProject do
   defp deps do
     [
       # Core ecosystem
-      {:zoi, "~> 0.16"},
+      {:zoi, "~> 0.17"},
       {:splode, ">= 0.2.9 and < 0.4.0"},
       harness_dep(),
       {:gemini_cli_sdk, "~> 0.1"},

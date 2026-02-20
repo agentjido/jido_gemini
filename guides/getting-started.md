@@ -29,6 +29,16 @@ mix deps.get
 # Events will be a stream of normalized Jido.Harness.Event structs
 ```
 
+## Runtime Validation
+
+Before integration, validate CLI install and compatibility:
+
+```bash
+mix gemini.install
+mix gemini.compat
+mix gemini.smoke "Say hello"
+```
+
 ## Adapter Implementation
 
 Jido.Gemini.Adapter implements the `Jido.Harness.Adapter` behaviour:

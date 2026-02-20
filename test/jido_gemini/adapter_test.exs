@@ -3,7 +3,7 @@ defmodule Jido.Gemini.AdapterTest do
 
   alias GeminiCliSdk.Types.{InitEvent, MessageEvent, ResultEvent}
   alias Jido.Harness.RunRequest
-  alias Jido.Gemini.Adapter
+  alias Jido.Gemini.{Adapter, Mapper}
 
   defmodule StubSdk do
     def execute(prompt, _opts) do
@@ -15,11 +15,22 @@ defmodule Jido.Gemini.AdapterTest do
     def run(_prompt, _opts), do: {:ok, "unused"}
   end
 
+  defmodule StubMapper do
+    def map_event(event) do
+      Application.get_env(:jido_gemini, :stub_gemini_map_event, fn value ->
+        Mapper.map_event(value)
+      end).(event)
+    end
+  end
+
   setup do
     old_sdk = Application.get_env(:jido_gemini, :sdk_module)
     old_execute = Application.get_env(:jido_gemini, :stub_gemini_execute)
+    old_mapper = Application.get_env(:jido_gemini, :mapper_module)
+    old_map_event = Application.get_env(:jido_gemini, :stub_gemini_map_event)
 
     Application.put_env(:jido_gemini, :sdk_module, StubSdk)
+    Application.put_env(:jido_gemini, :mapper_module, StubMapper)
 
     Application.put_env(:jido_gemini, :stub_gemini_execute, fn prompt ->
       send(self(), {:gemini_execute, prompt})
@@ -34,6 +45,8 @@ defmodule Jido.Gemini.AdapterTest do
     on_exit(fn ->
       restore_env(:jido_gemini, :sdk_module, old_sdk)
       restore_env(:jido_gemini, :stub_gemini_execute, old_execute)
+      restore_env(:jido_gemini, :mapper_module, old_mapper)
+      restore_env(:jido_gemini, :stub_gemini_map_event, old_map_event)
     end)
 
     :ok
@@ -51,6 +64,14 @@ defmodule Jido.Gemini.AdapterTest do
     assert contract.provider == :gemini
     assert "GEMINI_API_KEY" in contract.host_env_required_any
     assert "gemini" in contract.runtime_tools_required
+    assert Enum.any?(contract.compatibility_probes, &(&1["command"] == "gemini --help"))
+
+    assert Enum.any?(contract.install_steps, fn step ->
+             String.contains?(step["command"], "@google/gemini-cli")
+           end)
+
+    assert String.contains?(contract.triage_command_template, "--output-format stream-json")
+    assert Adapter.capabilities().cancellation? == false
   end
 
   test "run/2 maps sdk events to harness events" do
@@ -61,6 +82,19 @@ defmodule Jido.Gemini.AdapterTest do
     assert_receive {:gemini_execute, "hello"}
     assert Enum.map(events, & &1.type) == [:session_started, :output_text_delta, :session_completed]
     assert Enum.all?(events, &(&1.provider == :gemini))
+  end
+
+  test "run/2 emits session_failed events when mapper returns errors" do
+    Application.put_env(:jido_gemini, :stub_gemini_map_event, fn _event ->
+      {:error, :mapper_failed}
+    end)
+
+    request = RunRequest.new!(%{prompt: "hello", cwd: "/tmp", metadata: %{}})
+    assert {:ok, stream} = Adapter.run(request, [])
+    events = Enum.to_list(stream)
+
+    assert Enum.all?(events, &(&1.type == :session_failed))
+    assert Enum.all?(events, &(&1.payload["error"] =~ "mapper_failed"))
   end
 
   defp restore_env(app, key, nil), do: Application.delete_env(app, key)

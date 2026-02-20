@@ -25,6 +25,16 @@ end
 Jido.Gemini.run("Hello, Gemini!")
 ```
 
+## Runtime Tooling
+
+Use the built-in tasks to validate local CLI readiness:
+
+```bash
+mix gemini.install
+mix gemini.compat
+mix gemini.smoke "Say hello"
+```
+
 ## License
 
 Apache-2.0 — see [LICENSE](LICENSE) for details.

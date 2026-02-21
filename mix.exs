@@ -74,7 +74,7 @@ defmodule Jido.Gemini.MixProject do
       # Core ecosystem
       {:zoi, "~> 0.17"},
       {:splode, ">= 0.2.9 and < 0.4.0"},
-      harness_dep(),
+      {:jido_harness, github: "agentjido/jido_harness", branch: "main", override: true},
       {:gemini_cli_sdk, "~> 0.1"},
       {:jason, "~> 1.4"},
 
@@ -87,14 +87,6 @@ defmodule Jido.Gemini.MixProject do
       {:git_hooks, "~> 0.8", only: [:dev, :test], runtime: false},
       {:git_ops, "~> 2.9", only: :dev, runtime: false}
     ]
-  end
-
-  defp harness_dep do
-    if File.dir?("../jido_harness") do
-      {:jido_harness, "~> 0.1", path: "../jido_harness", override: true}
-    else
-      {:jido_harness, "~> 0.1"}
-    end
   end
 
   defp aliases do

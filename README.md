@@ -38,3 +38,13 @@ mix gemini.smoke "Say hello"
 ## License
 
 Apache-2.0 — see [LICENSE](LICENSE) for details.
+
+## Package Purpose
+
+`jido_gemini` is the Gemini CLI adapter for `jido_harness`, providing normalized request/event handling and runtime compatibility checks.
+
+## Testing Paths
+
+- Unit/contract tests: `mix test`
+- Full quality gate: `mix quality`
+- Optional live checks: `mix gemini.install && mix gemini.compat`

@@ -1,6 +1,12 @@
 defmodule Jido.Gemini.AdapterTest do
   use ExUnit.Case, async: false
 
+  use Jido.Harness.AdapterContract,
+    adapter: Jido.Gemini.Adapter,
+    provider: :gemini,
+    check_run: true,
+    run_request: %{prompt: "contract gemini run", cwd: "/repo", metadata: %{}}
+
   alias GeminiCliSdk.Types.{InitEvent, MessageEvent, ResultEvent}
   alias Jido.Harness.RunRequest
   alias Jido.Gemini.{Adapter, Mapper}

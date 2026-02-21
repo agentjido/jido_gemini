@@ -24,6 +24,9 @@ defmodule Jido.Gemini.MixProject do
         extras: ["README.md", "CHANGELOG.md", "CONTRIBUTING.md", "guides/getting-started.md"],
         formatters: ["html"]
       ],
+      dialyzer: [
+        plt_add_apps: [:mix]
+      ],
       test_coverage: [
         tool: ExCoveralls,
         summary: [threshold: 90]

@@ -98,7 +98,7 @@ defmodule Jido.Gemini.Mapper do
       provider: :gemini,
       session_id: session_id,
       timestamp: DateTime.utc_now() |> DateTime.to_iso8601(),
-      payload: stringify_keys(payload || %{}),
+      payload: stringify_keys(payload),
       raw: raw
     })
   end

@@ -4,6 +4,9 @@ defmodule Jido.Gemini.CLI do
   @type cli_spec :: %{required(:program) => String.t()}
   @type resolve_opt :: {:gemini_cli_path, String.t()} | {:cli_path, String.t()}
 
+  @doc """
+  Returns a configured Gemini CLI path from opts or application config.
+  """
   @spec configured_path([resolve_opt()]) :: String.t() | nil
   def configured_path(opts \\ []) when is_list(opts) do
     opts[:gemini_cli_path] ||
@@ -11,6 +14,9 @@ defmodule Jido.Gemini.CLI do
       Application.get_env(:jido_gemini, :gemini_cli_path)
   end
 
+  @doc """
+  Resolves the Gemini CLI executable path from override config or system PATH.
+  """
   @spec resolve([resolve_opt()]) :: {:ok, cli_spec()} | {:error, :enoent}
   def resolve(opts \\ []) when is_list(opts) do
     case configured_path(opts) do

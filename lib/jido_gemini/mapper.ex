@@ -20,6 +20,11 @@ defmodule Jido.Gemini.Mapper do
     {:ok, [build_event(type, nil, %{"role" => "assistant", "text" => event.content}, event)]}
   end
 
+  # Emit user messages so the prompt shows in the UI
+  def map_event(%MessageEvent{role: "user"} = event) do
+    {:ok, [build_event(:user_message, nil, %{"role" => "user", "text" => event.content}, event)]}
+  end
+
   def map_event(%MessageEvent{} = event) do
     {:ok, [build_event(:provider_event, nil, %{"role" => event.role, "text" => event.content}, event)]}
   end
@@ -46,27 +51,26 @@ defmodule Jido.Gemini.Mapper do
   end
 
   def map_event(%ResultEvent{} = event) do
-    if event.status == "success" do
-      {:ok,
-       [
-         build_event(
-           :session_completed,
-           nil,
-           %{"status" => event.status, "stats" => event.stats},
-           event
-         )
-       ]}
-    else
-      {:ok,
-       [
-         build_event(
-           :session_failed,
-           nil,
-           %{"status" => event.status, "error" => event.error, "stats" => event.stats},
-           event
-         )
-       ]}
-    end
+    usage_event = maybe_usage_event(event.stats, event)
+
+    session_event =
+      if event.status == "success" do
+        build_event(
+          :session_completed,
+          nil,
+          %{"status" => event.status, "stats" => event.stats},
+          event
+        )
+      else
+        build_event(
+          :session_failed,
+          nil,
+          %{"status" => event.status, "error" => event.error, "stats" => event.stats},
+          event
+        )
+      end
+
+    {:ok, List.wrap(usage_event) ++ [session_event]}
   end
 
   def map_event(%ErrorEvent{} = event) do
@@ -103,6 +107,10 @@ defmodule Jido.Gemini.Mapper do
     })
   end
 
+  defp stringify_keys(%{__struct__: _} = struct) do
+    struct |> Map.from_struct() |> stringify_keys()
+  end
+
   defp stringify_keys(map) when is_map(map) do
     map
     |> Enum.map(fn {k, v} -> {to_string(k), stringify_keys(v)} end)
@@ -111,4 +119,33 @@ defmodule Jido.Gemini.Mapper do
 
   defp stringify_keys(list) when is_list(list), do: Enum.map(list, &stringify_keys/1)
   defp stringify_keys(value), do: value
+
+  defp maybe_usage_event(%GeminiCliSdk.Types.Stats{} = stats, raw) do
+    build_event(:usage, nil, %{
+      "usage" => %{
+        "input_tokens" => stats.input_tokens || 0,
+        "output_tokens" => stats.output_tokens || 0,
+        "total_tokens" => stats.total_tokens || 0
+      },
+      "duration_ms" => stats.duration_ms
+    }, raw)
+  end
+
+  defp maybe_usage_event(%{} = stats, raw) do
+    input = stats["input_tokens"] || stats[:input_tokens] || 0
+    output = stats["output_tokens"] || stats[:output_tokens] || 0
+
+    if input > 0 or output > 0 do
+      build_event(:usage, nil, %{
+        "usage" => %{
+          "input_tokens" => input,
+          "output_tokens" => output
+        }
+      }, raw)
+    else
+      nil
+    end
+  end
+
+  defp maybe_usage_event(_, _), do: nil
 end

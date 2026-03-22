@@ -22,10 +22,10 @@ defmodule Jido.Gemini.AdapterTest do
   end
 
   defmodule StubMapper do
-    def map_event(event) do
-      Application.get_env(:jido_gemini, :stub_gemini_map_event, fn value ->
-        Mapper.map_event(value)
-      end).(event)
+    def map_event(event, session_id \\ nil) do
+      Application.get_env(:jido_gemini, :stub_gemini_map_event, fn value, sid ->
+        Mapper.map_event(value, sid)
+      end).(event, session_id)
     end
   end
 
@@ -88,10 +88,12 @@ defmodule Jido.Gemini.AdapterTest do
     assert_receive {:gemini_execute, "hello"}
     assert Enum.map(events, & &1.type) == [:session_started, :output_text_delta, :session_completed]
     assert Enum.all?(events, &(&1.provider == :gemini))
+    # session_id from InitEvent is threaded to all subsequent events
+    assert Enum.all?(events, &(&1.session_id == "gem-1"))
   end
 
   test "run/2 emits session_failed events when mapper returns errors" do
-    Application.put_env(:jido_gemini, :stub_gemini_map_event, fn _event ->
+    Application.put_env(:jido_gemini, :stub_gemini_map_event, fn _event, _session_id ->
       {:error, :mapper_failed}
     end)
 

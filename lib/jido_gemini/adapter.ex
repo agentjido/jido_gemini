@@ -51,13 +51,19 @@ defmodule Jido.Gemini.Adapter do
       stream =
         sdk_module()
         |> apply(:execute, [request.prompt, options])
-        |> Stream.flat_map(fn event ->
-          case mapper_module().map_event(event) do
+        |> Stream.transform(nil, fn event, session_id ->
+          current_session_id =
+            case event do
+              %{session_id: sid} when is_binary(sid) and sid != "" -> sid
+              _ -> session_id
+            end
+
+          case mapper_module().map_event(event, current_session_id) do
             {:ok, events} when is_list(events) ->
-              events
+              {events, current_session_id}
 
             {:error, reason} ->
-              [mapper_error_event(reason)]
+              {[mapper_error_event(reason)], current_session_id}
           end
         end)
 

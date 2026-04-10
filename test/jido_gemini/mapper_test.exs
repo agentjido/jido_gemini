@@ -18,10 +18,48 @@ defmodule Jido.Gemini.MapperTest do
     assert mapped.payload["text"] == "hello"
   end
 
+  test "map_event/2 threads session_id to non-init events" do
+    event = %MessageEvent{role: "assistant", content: "hi", delta: false}
+    assert {:ok, [mapped]} = Mapper.map_event(event, "sess-42")
+    assert mapped.session_id == "sess-42"
+    assert mapped.type == :output_text_final
+  end
+
   test "map_event/1 maps result success events" do
     event = %ResultEvent{status: "success"}
     assert {:ok, [mapped]} = Mapper.map_event(event)
     assert mapped.type == :session_completed
+  end
+
+  test "map_event/2 emits flat usage event via UsageEvent.build for result with stats" do
+    stats = %GeminiCliSdk.Types.Stats{input_tokens: 100, output_tokens: 50, total_tokens: 150, duration_ms: 1200}
+    event = %ResultEvent{status: "success", stats: stats}
+    assert {:ok, [usage, completed]} = Mapper.map_event(event, "sess-7")
+
+    assert usage.type == :usage
+    assert usage.session_id == "sess-7"
+    assert usage.payload["input_tokens"] == 100
+    assert usage.payload["output_tokens"] == 50
+    assert usage.payload["total_tokens"] == 150
+    assert usage.payload["duration_ms"] == 1200
+    refute Map.has_key?(usage.payload, "usage")
+
+    assert completed.type == :session_completed
+    assert completed.session_id == "sess-7"
+  end
+
+  test "map_event/2 preserves canonical usage fields for map-shaped stats" do
+    stats = %{"input_tokens" => 10, "output_tokens" => 4, "total_tokens" => 20, "duration_ms" => 300}
+    event = %ResultEvent{status: "success", stats: stats}
+
+    assert {:ok, [usage, completed]} = Mapper.map_event(event, "sess-8")
+
+    assert usage.type == :usage
+    assert usage.payload["input_tokens"] == 10
+    assert usage.payload["output_tokens"] == 4
+    assert usage.payload["total_tokens"] == 20
+    assert usage.payload["duration_ms"] == 300
+    assert completed.type == :session_completed
   end
 
   test "map_event/1 maps tool calls and results" do

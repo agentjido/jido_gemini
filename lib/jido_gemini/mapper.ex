@@ -141,11 +141,15 @@ defmodule Jido.Gemini.Mapper do
   defp maybe_usage_event(%{} = stats, session_id, raw) do
     input = stats["input_tokens"] || stats[:input_tokens] || 0
     output = stats["output_tokens"] || stats[:output_tokens] || 0
+    total = stats["total_tokens"] || stats[:total_tokens] || input + output
+    duration_ms = stats["duration_ms"] || stats[:duration_ms]
 
     if input > 0 or output > 0 do
       UsageEvent.build(:gemini, session_id || "unknown",
         input_tokens: input,
         output_tokens: output,
+        total_tokens: total,
+        duration_ms: duration_ms,
         raw: raw
       )
     else

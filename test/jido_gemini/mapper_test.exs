@@ -48,6 +48,20 @@ defmodule Jido.Gemini.MapperTest do
     assert completed.session_id == "sess-7"
   end
 
+  test "map_event/2 preserves canonical usage fields for map-shaped stats" do
+    stats = %{"input_tokens" => 10, "output_tokens" => 4, "total_tokens" => 20, "duration_ms" => 300}
+    event = %ResultEvent{status: "success", stats: stats}
+
+    assert {:ok, [usage, completed]} = Mapper.map_event(event, "sess-8")
+
+    assert usage.type == :usage
+    assert usage.payload["input_tokens"] == 10
+    assert usage.payload["output_tokens"] == 4
+    assert usage.payload["total_tokens"] == 20
+    assert usage.payload["duration_ms"] == 300
+    assert completed.type == :session_completed
+  end
+
   test "map_event/1 maps tool calls and results" do
     tool_use = %ToolUseEvent{tool_id: "tool_1", tool_name: "Read", parameters: %{"path" => "README.md"}}
     tool_result = %ToolResultEvent{tool_id: "tool_1", output: "ok", status: "success"}

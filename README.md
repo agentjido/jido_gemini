@@ -13,11 +13,13 @@ Add `jido_gemini` and `jido_harness` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:jido_harness, "~> 0.1"},
-    {:jido_gemini, "~> 0.1"}
+    {:jido_harness, github: "agentjido/jido_harness", branch: "main", override: true},
+    {:jido_gemini, github: "agentjido/jido_gemini", branch: "main"}
   ]
 end
 ```
+
+This repo is currently aligned as part of the GitHub-based harness package set rather than a Hex release line.
 
 ## Usage
 

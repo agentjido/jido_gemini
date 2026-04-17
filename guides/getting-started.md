@@ -4,12 +4,13 @@ Jido.Gemini is an adapter that wraps the Gemini CLI SDK to implement the Jido.Ha
 
 ## Installation
 
-Add `jido_gemini` to your `mix.exs` dependencies:
+Add `jido_gemini` and `jido_harness` to your `mix.exs` dependencies:
 
 ```elixir
 defp deps do
   [
-    {:jido_gemini, "~> 0.1"}
+    {:jido_harness, github: "agentjido/jido_harness", branch: "main", override: true},
+    {:jido_gemini, github: "agentjido/jido_gemini", branch: "main"}
   ]
 end
 ```

@@ -6,8 +6,8 @@ defmodule Jido.Gemini.Adapter do
   @behaviour Jido.Harness.Adapter
 
   alias GeminiCliSdk.Options
+  alias Jido.Gemini.{Error, Mapper}
   alias Jido.Harness.{Capabilities, Event, RunRequest, RuntimeContract}
-  alias Jido.Gemini.Mapper
 
   @option_keys [
     :model,
@@ -46,7 +46,9 @@ defmodule Jido.Gemini.Adapter do
 
   @impl true
   @spec run(RunRequest.t(), keyword()) :: {:ok, Enumerable.t()} | {:error, term()}
-  def run(%RunRequest{} = request, opts \\ []) when is_list(opts) do
+  def run(request, opts \\ [])
+
+  def run(%RunRequest{} = request, opts) when is_list(opts) do
     with {:ok, options} <- build_options(request, opts) do
       stream =
         sdk_module()
@@ -74,7 +76,11 @@ defmodule Jido.Gemini.Adapter do
     end
   rescue
     e in [ArgumentError] ->
-      {:error, {:gemini_invalid_request, Exception.message(e)}}
+      {:error, Error.validation_error("Invalid Gemini run request", %{details: Exception.message(e)})}
+  end
+
+  def run(other, _opts) do
+    {:error, Error.validation_error("Gemini adapter expects %Jido.Harness.RunRequest{}", %{value: other})}
   end
 
   @impl true
@@ -158,10 +164,15 @@ defmodule Jido.Gemini.Adapter do
       |> Map.merge(runtime_attrs)
       |> Map.put_new(:output_format, "stream-json")
 
-    {:ok, struct(Options, attrs)}
+    options =
+      attrs
+      |> then(&struct(Options, &1))
+      |> Options.validate!()
+
+    {:ok, options}
   rescue
     e in [KeyError, ArgumentError] ->
-      {:error, {:gemini_option_error, Exception.message(e)}}
+      {:error, Error.validation_error("Invalid Gemini adapter options", %{details: Exception.message(e)})}
   end
 
   defp normalize_map_keys(map) when is_map(map) do

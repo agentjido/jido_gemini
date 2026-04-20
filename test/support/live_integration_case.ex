@@ -19,8 +19,7 @@ defmodule Jido.Gemini.LiveIntegrationCase do
   def skip_reason do
     ensure_env_loaded()
 
-    missing_auth_reason() ||
-      cli_skip_reason() ||
+    cli_skip_reason() ||
       compatibility_skip_reason()
   end
 
@@ -51,14 +50,6 @@ defmodule Jido.Gemini.LiveIntegrationCase do
     end
   end
 
-  defp missing_auth_reason do
-    if auth_env_present?() do
-      nil
-    else
-      "set GEMINI_API_KEY, GOOGLE_API_KEY, or Vertex/GCA auth env vars to run Gemini integration tests"
-    end
-  end
-
   defp cli_skip_reason do
     case CLI.resolve(cli_opts()) do
       {:ok, _spec} ->
@@ -77,13 +68,6 @@ defmodule Jido.Gemini.LiveIntegrationCase do
       :ok -> nil
       {:error, reason} -> "Gemini CLI compatibility check failed: #{reason_message(reason)}"
     end
-  end
-
-  defp auth_env_present? do
-    Enum.any?(
-      ~w(GEMINI_API_KEY GOOGLE_API_KEY GOOGLE_GENAI_USE_VERTEXAI GOOGLE_GENAI_USE_GCA),
-      &(env_value(&1) != nil)
-    )
   end
 
   defp reason_message(%{__exception__: true} = reason), do: Exception.message(reason)

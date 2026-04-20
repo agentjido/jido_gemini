@@ -63,7 +63,7 @@ The test auto-loads `.env` and is excluded from default `mix test` runs.
 
 Environment knobs:
 
-- `GEMINI_API_KEY` or `GOOGLE_API_KEY` for standard auth
+- `GEMINI_API_KEY` or `GOOGLE_API_KEY` for env-based auth
 - `GOOGLE_GENAI_USE_VERTEXAI` or `GOOGLE_GENAI_USE_GCA` for Vertex/GCA auth flows
 - `JIDO_GEMINI_LIVE_PROMPT` to override the default prompt
 - `JIDO_GEMINI_LIVE_CWD` to override the working directory

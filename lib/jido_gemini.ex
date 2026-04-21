@@ -14,8 +14,8 @@ defmodule Jido.Gemini do
   @doc """
   Runs a prompt through the Gemini CLI adapter.
 
-  Delegates to `Jido.Gemini.Adapter.run/2` to handle the actual execution
-  and event translation from the Gemini SDK to Jido.Harness events.
+  Delegates to the adapter implementation to handle the actual execution and
+  event translation from the Gemini SDK to Jido.Harness events.
 
   ## Parameters
 

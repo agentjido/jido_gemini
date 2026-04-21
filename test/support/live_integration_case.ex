@@ -57,9 +57,6 @@ defmodule Jido.Gemini.LiveIntegrationCase do
 
       {:error, :enoent} ->
         "Gemini CLI is not available. Install it with `mix gemini.install`."
-
-      {:error, reason} ->
-        "Gemini CLI could not be resolved: #{inspect(reason)}"
     end
   end
 
@@ -97,7 +94,6 @@ defmodule Jido.Gemini.LiveIntegrationCase do
     end
   end
 
-  defp truthy?(true), do: true
   defp truthy?("true"), do: true
   defp truthy?("1"), do: true
   defp truthy?("yes"), do: true

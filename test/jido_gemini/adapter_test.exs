@@ -9,7 +9,7 @@ defmodule Jido.Gemini.AdapterTest do
 
   alias GeminiCliSdk.Types.{InitEvent, MessageEvent, ResultEvent}
   alias Jido.Harness.RunRequest
-  alias Jido.Gemini.{Adapter, Mapper}
+  alias Jido.Gemini.{Adapter, Error, Mapper}
 
   defmodule StubSdk do
     def execute(prompt, _opts) do
@@ -103,6 +103,24 @@ defmodule Jido.Gemini.AdapterTest do
 
     assert Enum.all?(events, &(&1.type == :session_failed))
     assert Enum.all?(events, &(&1.payload["error"] =~ "mapper_failed"))
+  end
+
+  test "run/2 returns structured validation errors for invalid request terms" do
+    assert {:error, %Error.InvalidInputError{message: message, value: value}} =
+             Adapter.run(:not_a_run_request, [])
+
+    assert message =~ "expects %Jido.Harness.RunRequest{}"
+    assert value == :not_a_run_request
+  end
+
+  test "run/2 returns structured validation errors for invalid adapter options" do
+    request = RunRequest.new!(%{prompt: "hello", cwd: "/tmp", metadata: %{}})
+
+    assert {:error, %Error.InvalidInputError{message: message, details: details}} =
+             Adapter.run(request, yolo: true, approval_mode: :plan)
+
+    assert message == "Invalid Gemini adapter options"
+    assert details[:details] =~ "Cannot set both :yolo and :approval_mode"
   end
 
   defp restore_env(app, key, nil), do: Application.delete_env(app, key)

@@ -39,6 +39,9 @@ defmodule Jido.Gemini do
 
     with {:ok, request} <- Jido.Harness.RunRequest.new(Map.new([{:prompt, prompt} | request_opts])) do
       Jido.Gemini.Adapter.run(request, adapter_opts)
+    else
+      {:error, reason} ->
+        {:error, Jido.Gemini.Error.validation_error("Invalid Gemini run request", %{details: inspect(reason)})}
     end
   end
 end

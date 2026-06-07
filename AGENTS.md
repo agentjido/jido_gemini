@@ -21,3 +21,7 @@ Jido.Gemini is a thin adapter that wraps the `gemini_cli_sdk` package to impleme
 - Follow standard Elixir conventions
 - Line length: 120 characters
 - Use `Logger` for output, not `IO.puts`
+
+## Release Hygiene
+
+- Do not modify `CHANGELOG.md`; release notes are generated from Git history during release, so keep changes focused on proper Conventional Commits.

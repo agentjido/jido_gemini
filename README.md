@@ -1,5 +1,11 @@
 # Jido.Gemini
 
+> [!WARNING]
+> **Deprecated.** This repository is no longer maintained and is retained as a
+> read-only archive. Gemini support now lives directly in
+> [Jido Harness](https://github.com/agentjido/jido_harness). Use `jido_harness`
+> for new development.
+
 [![Hex.pm](https://img.shields.io/hexpm/v/jido_gemini.svg)](https://hex.pm/packages/jido_gemini)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/jido_gemini/)
 [![CI](https://github.com/agentjido/jido_gemini/actions/workflows/ci.yml/badge.svg)](https://github.com/agentjido/jido_gemini/actions/workflows/ci.yml)
